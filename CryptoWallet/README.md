@@ -5,7 +5,7 @@ Autumn 2022
 Assessment Task 3 
 
 Code on Github
-hello
+https://github.com/Sracc/IOS_Group_A3
 
 Cmp1-04 - HTCX
 
