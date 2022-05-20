@@ -70,6 +70,7 @@
 		08B476332823908500BEACB8 /* WalletUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		324620E3283685CC00F9F5EC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		324620E52836927B00F9F5EC /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		324620E828379D4D00F9F5EC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		328B4C00283245D400DD329C /* PurchaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewController.swift; sourceTree = "<group>"; };
 		328B4C02283261B300DD329C /* BuySwapDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuySwapDetailsViewController.swift; sourceTree = "<group>"; };
 		328B4C04283276D600DD329C /* SwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				08B4760F2823908200BEACB8 /* Wallet */,
+				324620E828379D4D00F9F5EC /* README.md */,
 				08B476262823908500BEACB8 /* WalletTests */,
 				08B476302823908500BEACB8 /* WalletUITests */,
 				08B4760E2823908200BEACB8 /* Products */,
