@@ -64,21 +64,41 @@ class SettingsViewController: UIViewController {
         
     }
     
-    
+    //delete all wallet
     @IBAction func resetData(_ sender: UIButton) {
         let loader = WalletLoader()
-        loader.deleteWallet(walletAddress: "")
+        //create alert
+        let resetAlert = UIAlertController(title: "Remove Wallets" , message: "Are you sure to remove all wallets?", preferredStyle: UIAlertController.Style.alert)
+        
+        resetAlert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: {(action: UIAlertAction!) in
+            loader.deleteWallet(walletAddress: "")
+            print("Data is deleted")
+            //print wallet number in user default
+            print(UserDefaults.standard.data(forKey: "wallets")?.count ?? 0)
+            //go to home page
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
+            self.navigationController?.pushViewController(vc!, animated: true)
+            vc!.navigationItem.setHidesBackButton(true, animated: true)
+        }))
+        
+        resetAlert.addAction(UIAlertAction(title: "No", style: .default, handler: {(action: UIAlertAction!) in
+            resetAlert.dismiss(animated: true, completion: nil)
+            //print wallet count in user default
+            print(UserDefaults.standard.data(forKey: "wallets")?.count ?? 0)
+        }))
+        
+        present(resetAlert, animated: true, completion: nil)
     }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
+
+
+/*
+ // MARK: - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+ // Get the new view controller using segue.destination.
+ // Pass the selected object to the new view controller.
+ }
+ */
+
