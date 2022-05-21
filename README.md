@@ -9,22 +9,22 @@ Code on Github
 
 Cmp1-04: HTCX
 
-Name
-Student ID
-UTS email
-Contribution
+
 Yan Hua
 14109995
 yan.hua@student.uts.edu.au
 25%
+
 Kaitao Tan 
 14093583
 kaitao.tan@student.uts.edu.au
 25%
+
 Kin Kwan Chang
 14073656
 kinkwan.chang@student.uts.edu.au
 25%
+
 Zhe Xu
 13740117
 zhe.xu@student.uts.edu.au
@@ -41,8 +41,10 @@ WalletLoader: Kaitao Tan, Zhe Xu
 SeedPhraseWordPool: Yan Hua
 WalletGenerator: Yan Hua
 PriceModel: Kaitao Tan
+
 View:
 Main: Yan Hua, Kaitao Tan, Kin Kwan Chang, Zhe Xu
+
 Controller:
 CreateNewWalletViewController: Yan Hua
 RecoveryPhraseViewController: Yan Hua
