@@ -57,11 +57,9 @@ class TransactionViewController: UIViewController {
     @IBAction func completeSend(_ sender: UIButton) {
         switch tokenSent{
         case "ETH":
-            Thread.detachNewThread{ [self] in
             //update fromWallet ETH balance
-                wallet.ethBalance = self.ethBalance - Double(self.amountSent)!
-                self.loader.updateBalance(wallet: wallet)
-            }
+            wallet.ethBalance = ethBalance - Double(amountSent)!
+            loader.updateBalance(wallet: wallet)
             //update toWallet ETH balance
             tWallet.ethBalance = tethBalance + Double(amountSent)!
             loader.updateBalance(wallet: tWallet)
