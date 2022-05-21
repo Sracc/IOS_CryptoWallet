@@ -35,9 +35,9 @@ struct Wallet: Codable, Equatable {
     
     //init with address
     init(address:String){
-        ethBalance = 10
-        usdcBalance = 10
-        apeBalance = 10
+        ethBalance = 0
+        usdcBalance = 0
+        apeBalance = 0
         self.address = address
         
         walletName = ""
