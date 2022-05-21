@@ -1,4 +1,3 @@
-# IOS_Group_A3
 University of Technology Sydney
 42889 iOS Application Development
 Autumn 2022
@@ -8,32 +7,31 @@ Code on Github
 
 
 Cmp1-04: HTCX
+Group Member 1 Name: Yan Hua
+Student ID: 14109995
+UTS email: yan.hua@student.uts.edu.au
+Contribution: 25%
 
+Group Member 2 Name: Kaitao Tan
+Student ID: 14093583
+UTS email: kaitao.tan@student.uts.edu.au 
+Contribution: 25%
 
-Yan Hua
-14109995
-yan.hua@student.uts.edu.au
-25%
+Group Member 3 Name: Kin Kwan Chang
+Student ID: 14073656
+UTS email: kinkwan.chang@student.uts.edu.au 
+Contribution: 25%
 
-Kaitao Tan 
-14093583
-kaitao.tan@student.uts.edu.au
-25%
-
-Kin Kwan Chang
-14073656
-kinkwan.chang@student.uts.edu.au
-25%
-
-Zhe Xu
-13740117
-zhe.xu@student.uts.edu.au
-25%
+Group Member 4 Name: Zhe Xu
+Student ID: 13740117
+UTS email: zhe.xu@student.uts.edu.au 
+Contribution: 25%
 
 Github link:
 https://github.com/Sracc/IOS_Group_A3
 
 Contribution to this project:
+
 Model:
 WalletTableViewCell: Kaitao Tan, Kin Kwan Chang
 WalletAddress: Kaitao Tan
