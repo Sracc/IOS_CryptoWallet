@@ -7,6 +7,8 @@
 
 import Foundation
 
+var generator = WalletGenerator()
+
 struct Wallet: Codable, Equatable {
     var address: String
     var ethBalance: Double
@@ -26,11 +28,11 @@ struct Wallet: Codable, Equatable {
         ethBalance = 0
         usdcBalance = 0
         apeBalance = 0
-        address = ""
+        address = generator.generatePublicAddress()
         
         walletName = ""
-        privateKey = ""
-        seedPhrase = []
+        privateKey = generator.generatePrivateKey()
+        seedPhrase = generator.newSeedPhrase()
     }
     
     //init with address
@@ -41,28 +43,28 @@ struct Wallet: Codable, Equatable {
         self.address = address
         
         walletName = ""
-        privateKey = ""
-        seedPhrase = []
+        privateKey = generator.generatePrivateKey()
+        seedPhrase = generator.newSeedPhrase()
     }
     
-    //init with balance
-    init(address:String,ethBalance:Double,usdcBalance:Double,wethBalance:Double){
-        self.ethBalance = ethBalance
-        self.usdcBalance = usdcBalance
-        self.apeBalance = wethBalance
-        self.address = address
+    //init with privatekey
+    init(privatekey: String){
+        ethBalance = 0
+        usdcBalance = 0
+        apeBalance = 0
+        address = generator.generatePublicAddress()
         
         walletName = ""
-        privateKey = ""
-        seedPhrase = []
+        privateKey = privatekey
+        seedPhrase = generator.newSeedPhrase()
     }
     
     //init from seedphrase
     init(seedPhrase: [String]) {
         self.seedPhrase = seedPhrase
-        address = ""
+        address = generator.generatePublicAddress()
         walletName = ""
-        privateKey = ""
+        privateKey = generator.generatePrivateKey()
         
         ethBalance = 0
         usdcBalance = 0

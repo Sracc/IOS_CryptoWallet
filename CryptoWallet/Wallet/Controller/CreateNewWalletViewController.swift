@@ -9,11 +9,10 @@ import Foundation
 import UIKit
 
 class CreateNewWalletViewController: UIViewController {
-    var wallets:[Wallet] = []
     var newWallet:Wallet = Wallet()
-//    var KEY_LOCAL_WALLETS = "wallet"
     
     let loader = WalletLoader()//wallet loader
+    let generator = WalletGenerator()//wallet generator
 
     
    
@@ -38,49 +37,14 @@ class CreateNewWalletViewController: UIViewController {
         super.viewDidLoad()
         print("Create New Wallet View Loaded Successfully...")
         
-        //load wallets from user default
-        self.wallets = loader.loadWallet()
-        
-//        let savedWallets = self.readWalletsFromLocal()
-//        if savedWallets.count != 0 {
-//            wallets=savedWallets
-//        }
         
         //do something
-        var trailSeedPhrase = generateSeedPhrase()
-        while seedPhraseExisted(trailSeedPhrase: trailSeedPhrase){
-            trailSeedPhrase = generateSeedPhrase()
-        }
-        newWallet.seedPhrase = trailSeedPhrase
+        
+        //generate new wallet from seed phrase
+        newWallet.seedPhrase = generator.newSeedPhrase()
+        print(newWallet.seedPhrase)
         print("Valid New Seed Phrase Has Been Generated...")
         displaySeedPhrase(seedPhrase: newWallet.seedPhrase)
-    }
-
-    //generate random seedphrase from wordpool
-    func generateSeedPhrase()->[String]{
-        //randomly generate 12 words as a new seed phrase
-        var newSeedPhrase:[String]=[]
-        for _ in 1...12{
-            let randomGeneratedWordIndex = Int.random(in: 1...SeedPhraseWordPool.englishWordPool.count)
-            newSeedPhrase += [SeedPhraseWordPool.englishWordPool[randomGeneratedWordIndex]]
-            //func to avoid duplicate seedPhrase in user default
-        }
-        //
-        print(newSeedPhrase)
-        //
-        return newSeedPhrase
-    }
-    
-    //check seed phrase existence
-    func seedPhraseExisted(trailSeedPhrase:[String]) -> Bool{
-        print("Verifying Seed Phrase Existence...")
-        for validWallet in wallets {
-            if trailSeedPhrase == validWallet.seedPhrase {
-                print("Trail Seed Phrase Existed...Regenerating New Seed Phrase...")
-                return true
-            }
-        }
-        return false
     }
     
     //show seed phrase on screen
@@ -94,8 +58,6 @@ class CreateNewWalletViewController: UIViewController {
     
     override func prepare(for segue:UIStoryboardSegue,sender:Any?){
         if segue.identifier=="goToVerify"{
-//            wallets+=[newWallet]
-//            writeWalletsToLocal(newWallets:wallets)
             let toView = segue.destination as! RecoveryPhraseViewController
             toView.verifiedWallet = self.newWallet
         }

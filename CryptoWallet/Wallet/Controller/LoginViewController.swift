@@ -12,7 +12,7 @@ class LoginViewController: UIViewController {
     var wallet = Wallet()
     var wallets: [Wallet] = []
     var loader = WalletLoader()
-
+    
     @IBOutlet weak var addressTextField: UITextField!
     @IBOutlet weak var walletName: UITextField!
     override func viewDidLoad() {
@@ -56,7 +56,7 @@ class LoginViewController: UIViewController {
             VC.navigationItem.setHidesBackButton(true, animated: true)
         }
     }
-
-
+    
+    
 }
 
