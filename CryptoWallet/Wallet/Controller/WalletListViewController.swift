@@ -18,7 +18,7 @@ class WalletListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         //load decoded wallet data
         wallets = loader.loadWallet()
         addressArray = loader.getAddressList(walletList: wallets)
@@ -51,6 +51,6 @@ extension WalletListViewController: UITableViewDataSource, UITableViewDelegate {
             VC.navigationItem.setHidesBackButton(true, animated: true)
         }
     }
-                                                
-
+    
+    
 }

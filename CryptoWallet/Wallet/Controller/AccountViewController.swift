@@ -11,9 +11,9 @@ class AccountViewController: UIViewController {
     
     var address: String = ""
     //default balance for wallet
-    var ethBalance: Double = 100
-    var usdcBalance: Double = 100
-    var apeBalance: Double = 100
+    var ethBalance: Double = 0
+    var usdcBalance: Double = 0
+    var apeBalance: Double = 0
     var wallet = Wallet()
     var wallets: [Wallet] = []
     var loader = WalletLoader()//load wallet toolkits
@@ -21,8 +21,8 @@ class AccountViewController: UIViewController {
     //Token default price
     var ethPrice: Double = 2000
     var usdcPrice: Double = 1
-    var apePrice: Double = 2000
-
+    var apePrice: Double = 8
+    
     
     var currency: Double = 1 //default currency coefficient based on USD
     var currencySymbol: String = "$" //default currency symbol
@@ -31,7 +31,7 @@ class AccountViewController: UIViewController {
     var usdc24H: Double = 1
     var ape24H: Double = 8
     
-
+    
     @IBOutlet weak var walletNameLabel: UILabel!
     @IBOutlet weak var selectTypePullDown: UIButton!
     @IBOutlet weak var ethPercent: UILabel!
@@ -45,33 +45,52 @@ class AccountViewController: UIViewController {
     @IBOutlet weak var ethPriceLabel: UILabel!
     @IBOutlet weak var portfolioValue: UILabel!
     @IBOutlet weak var walletAddressLabel: UILabel!
+    // group labels
+    var ethLabelList: [UILabel] = []
+    var usdcLabelList: [UILabel] = []
+    var apeLabelList: [UILabel] = []
+    
+    //token list
+    enum Token: CaseIterable {
+        case eth
+        case usdc
+        case ape
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //pull down
+        //pull down menu to add wallet
         selectTypePullDown.showsMenuAsPrimaryAction = true
         // Do any additional setup after loading the view.
-        selectTypePullDown.setTitle("Create a new wallet", for: .normal)
+        selectTypePullDown.setTitle("", for: .normal)
         selectTypePullDown.menu = UIMenu(children: [
-                    UIAction(title: "Create a new wallet",  image: UIImage(systemName: "pencil"),handler: { action in
-                        self.selectTypePullDown.setTitle("Create a new wallet", for: .normal)
-                        self.performSegue(withIdentifier: "backToCreate", sender: self);
-                    }),
-                    UIAction(title: "Add a existing wallet", image: UIImage(systemName: "book"),handler: { action in
-                        self.selectTypePullDown.setTitle("Add a existing wallet", for: .normal)
-                        self.performSegue(withIdentifier: "backToExisting", sender: self);
-                    }),
-
+            UIAction(title: "Create a new wallet",  image: UIImage(systemName: "pencil"),handler: { action in
+                self.selectTypePullDown.setTitle("Create a new wallet", for: .normal)
+                self.performSegue(withIdentifier: "backToCreate", sender: self);
+            }),
+            UIAction(title: "Add a existing wallet", image: UIImage(systemName: "book"),handler: { action in
+                self.selectTypePullDown.setTitle("Add a existing wallet", for: .normal)
+                self.performSegue(withIdentifier: "backToExisting", sender: self);
+            }),
+            
         ])
-
+        
         // Do any additional setup after loading the view.
+        
+        //group labels based on token type
+        self.ethLabelList = [ethPriceLabel, ethPercent]
+        self.usdcLabelList = [usdcPriceLabel, usdcPercent]
+        self.apeLabelList = [apePriceLabel, apePercent]
+        
+        //if is first login, load default wallet
         wallets = loader.loadWallet()
         if address == "" {
             wallet = wallets[0]
             address = wallet.address
         }
         
+        //load wallet
         wallet = loader.getWallet(walletAddress: address)
         
         
@@ -79,13 +98,13 @@ class AccountViewController: UIViewController {
         walletAddressLabel.text = wallet.address
         walletNameLabel.text = wallet.walletName
         updateBalance()
-        
+        //load currency
         currency = UserDefaults.standard.double(forKey: "Currency")
         currencySymbol = UserDefaults.standard.string(forKey: "CurrencySymbol") ?? "$"
-
+        
         //fetch price data from API
         self.fetchData()
-
+        
         //timer to trigger API service
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) {
             timer in
@@ -108,7 +127,7 @@ class AccountViewController: UIViewController {
     }
     
     
-
+    
     //send token
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "send"{
@@ -138,137 +157,83 @@ class AccountViewController: UIViewController {
         }
     }
     
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-
-    
-    
-    //fectch ETH data from API services
-        func fetchEthData() {
-            let url = URL(string: "https://api.blockchain.com/v3/exchange/tickers/ETH-USD")
-            let defaultSession = URLSession(configuration: .default)
-            let dataTask = defaultSession.dataTask(with: url!) { (data: Data?, response: URLResponse?, error: Error?) in
-                if(error != nil)
-                {
-                    print(error!)
-                    return
-                }
-                
-                do{
-                    let decoder = try JSONDecoder().decode(Price.self, from: data!)
-                    
-                    DispatchQueue.main.async
-                    { [self] in
-                    ethPrice = currency * decoder.lastTradePrice
-                    eth24H = currency * decoder.price24H
-                    ethPriceLabel.text = loader.currencyFormatter(price: ethPrice, symbol: currencySymbol)
-                    ethPercent.text = decoder.getPercent() + "%"
-                        if decoder.lastTradePrice > decoder.price24H {
-                            ethPercent.textColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                            ethPriceLabel.textColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                        }
-
-                        if decoder.lastTradePrice < decoder.price24H {
-                            ethPercent.textColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-                            ethPriceLabel.textColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-                        }
-                    
-                    }
-                }
-                catch{
-                    print(error)
-                    return
-                }
+    //fectch Price data from API services
+    func fetchPriceData(token: Token) {
+        var symbol: String = ""
+        //select token
+        switch token {
+        case .eth:
+            symbol = "ETH-USD"
+        case .usdc:
+            symbol = "USDC-USD"
+        case .ape:
+            symbol = "APE-USD"
         }
-            dataTask.resume()
-    }
-    //fectch USDC data from API services
-        func fetchUsdcData() {
-            let url = URL(string: "https://api.blockchain.com/v3/exchange/tickers/USDC-USD")
-            let defaultSession = URLSession(configuration: .default)
-            let dataTask = defaultSession.dataTask(with: url!) { (data: Data?, response: URLResponse?, error: Error?) in
-                if(error != nil)
-                {
-                    print(error!)
-                    return
-                }
+        
+        //setup URLSession task
+        let url = URL(string: "https://api.blockchain.com/v3/exchange/tickers/" + symbol)
+        let defaultSession = URLSession(configuration: .default)
+        let dataTask = defaultSession.dataTask(with: url!) { (data: Data?, response: URLResponse?, error: Error?) in
+            if(error != nil)
+            {
+                print(error!)
+                return
+            }
+            
+            do{
+                let decoder = try JSONDecoder().decode(Price.self, from: data!)//decode API data
                 
-                do{
-                    let decoder = try JSONDecoder().decode(Price.self, from: data!)
-                    
-                    DispatchQueue.main.async
-                    { [self] in
+                DispatchQueue.main.async
+                { [self] in
+                    //update data
+                    switch token {
+                    case .eth:
+                        //update price
+                        ethPrice = currency * decoder.lastTradePrice
+                        eth24H = currency * decoder.price24H
+                        ethPriceLabel.text = loader.currencyFormatter(price: ethPrice, symbol: currencySymbol)
+                        ethPercent.text = decoder.getPercent() + "%"
+                        
+                        //update text color
+                        priceColor(lastPrice: decoder.lastTradePrice, price24H: decoder.price24H, labelList: self.ethLabelList)
+                        
+                        //update portfolio data
+                        updatePortfolio()
+                        
+                    case .usdc:
+                        //update price
                         usdcPrice = currency * decoder.lastTradePrice
                         usdc24H = currency * decoder.price24H
                         usdcPriceLabel.text = loader.currencyFormatter(price: usdcPrice, symbol: currencySymbol)
                         usdcPercent.text = decoder.getPercent() + "%"
-                        if decoder.lastTradePrice > decoder.price24H {
-                            usdcPercent.textColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                            usdcPriceLabel.textColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                        }
-
-                        if decoder.lastTradePrice < decoder.price24H {
-                            usdcPercent.textColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-                            usdcPriceLabel.textColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-                        }
-                    
-                    }
-                }
-                catch{
-                    print(error)
-                    return
-                }
-        }
-            dataTask.resume()
-    }
-    
-    //fectch APE data from API services
-        func fetchApeData() {
-            let url = URL(string: "https://api.blockchain.com/v3/exchange/tickers/APE-USD")
-            let defaultSession = URLSession(configuration: .default)
-            let dataTask = defaultSession.dataTask(with: url!) { (data: Data?, response: URLResponse?, error: Error?) in
-                if(error != nil)
-                {
-                    print(error!)
-                    return
-                }
-                
-                do{
-                    let decoder = try JSONDecoder().decode(Price.self, from: data!)
-                    
-                    DispatchQueue.main.async
-                    { [self] in
+                        
+                        //update text color
+                        priceColor(lastPrice: decoder.lastTradePrice, price24H: decoder.price24H, labelList: self.usdcLabelList)
+                        
+                        //update portfolio data
+                        updatePortfolio()
+                        
+                    case .ape:
+                        //update price
                         apePrice = currency * decoder.lastTradePrice
                         ape24H = currency * decoder.price24H
                         apePriceLabel.text = loader.currencyFormatter(price: apePrice, symbol: currencySymbol)
                         apePercent.text = decoder.getPercent() + "%"
-                        if decoder.lastTradePrice > decoder.price24H {
-                            apePercent.textColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                            apePriceLabel.textColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                        }
-
-                        if decoder.lastTradePrice < decoder.price24H {
-                            apePercent.textColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-                            apePriceLabel.textColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-                        }
-                    
+                        
+                        //update text color
+                        priceColor(lastPrice: decoder.lastTradePrice, price24H: decoder.price24H, labelList: self.apeLabelList)
+                        
+                        //update portfolio data
+                        updatePortfolio()
                     }
                 }
-                catch{
-                    print(error)
-                    return
-                }
+            }
+            catch{
+                print(error)
+                return
+            }
         }
-            dataTask.resume()
+        dataTask.resume()
     }
     
     //update portfolio balance and total value
@@ -297,11 +262,24 @@ class AccountViewController: UIViewController {
         }
     }
     
+    //update price and portfolio
     func fetchData() {
-        self.fetchEthData()
-        self.fetchUsdcData()
-        self.fetchApeData()
+        self.fetchPriceData(token: .eth)
+        self.fetchPriceData(token: .usdc)
+        self.fetchPriceData(token: .ape)
         self.updatePortfolio()
     }
-
+    
+    //update price label text color based on price change
+    func priceColor(lastPrice: Double, price24H: Double, labelList: [UILabel]) {
+        if lastPrice > price24H {
+            labelList[0].textColor =  #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
+            labelList[1].textColor =  #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
+        }
+        
+        if lastPrice < price24H {
+            labelList[0].textColor =  #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
+            labelList[1].textColor =  #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
+        }
+    }
 }
