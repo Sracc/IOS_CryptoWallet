@@ -87,7 +87,7 @@ class SwapViewController: UIViewController ,UIPickerViewDelegate, UIPickerViewDa
     @IBAction func completeSwap(_ sender: UIButton) {
         //check the currency whether is the same
         if pickerData[0][firstPickerValue] != pickerData[2][secondPickerValue]{
-            if Double(accountText.text!)! <= accountStepper.maximumValue || Double(accountText.text!)!==0{
+            if Double(accountText.text!)! <= accountStepper.maximumValue && Double(accountText.text!)!>0{
                 
                 
             
