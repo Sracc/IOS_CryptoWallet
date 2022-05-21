@@ -47,9 +47,12 @@ public class WalletGenerator {
         //randomly generate 12 words as a new seed phrase
         var newSeedPhrase:[String]=[]
         for _ in 1...12{
-            let randomGeneratedWordIndex = Int.random(in: 1...SeedPhraseWordPool.englishWordPool.count)
+            var randomGeneratedWordIndex = Int.random(in: 0...SeedPhraseWordPool.englishWordPool.count-1)
+            while newSeedPhrase.contains(SeedPhraseWordPool.englishWordPool[randomGeneratedWordIndex]){
+                randomGeneratedWordIndex = Int.random(in: 0...SeedPhraseWordPool.englishWordPool.count-1)
+                print("Duplicate word generated, regenerating..")
+            }
             newSeedPhrase += [SeedPhraseWordPool.englishWordPool[randomGeneratedWordIndex]]
-            //func to avoid duplicate seedPhrase in user default
         }
         return newSeedPhrase
     }
