@@ -141,6 +141,43 @@ class WalletLoader {
         return symbol+priceString
     }
     
+    
+    //check existence of private key
+    func checkPrivatekey(privatekey: String) -> Bool {
+        let wallets = loadWallet()
+        for wallet in wallets {
+            if wallet.privateKey == privatekey {
+                print("Privatekey exist")
+                return true
+            }
+        }
+        return false
+    }
+    
+    //get wallet from privatekey
+    func getWallet(privatekey: String) -> Wallet {
+        let wallets = loadWallet()
+        var foundWallet = Wallet()
+        for wallet in wallets {
+            if privatekey == wallet.privateKey {
+                foundWallet = wallet
+            }
+        }
+        return foundWallet
+    }
+    
+    //get wallet from Seed Phrase
+    func getWallet(seedPhrase: [String]) -> Wallet {
+        let wallets = loadWallet()
+        var foundWallet = Wallet()
+        for wallet in wallets {
+            if seedPhrase == wallet.seedPhrase {
+                foundWallet = wallet
+            }
+        }
+        return foundWallet
+    }
+    
 
 
 
