@@ -86,8 +86,19 @@ class AccountViewController: UIViewController {
         //if is first login, load default wallet
         wallets = loader.loadWallet()
         if address == "" {
+            if wallets.count > 0 {
             wallet = wallets[0]
             address = wallet.address
+            }
+            else {
+                print("Wallet not found, out of index")
+                loader.deleteWallet(walletAddress: "")
+
+                //Back to home
+                let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController")
+                self.navigationController?.pushViewController(vc!, animated: false)
+                vc!.navigationItem.setHidesBackButton(true, animated: true)
+            }
         }
         
         //load wallet
